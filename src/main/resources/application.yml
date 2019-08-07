@@ -1,0 +1,147 @@
+---
+spring:
+  profiles: dev
+  application:
+    name: service-auth-dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://11.205.243.75:3306/oa_admin?useUnicode=true&characterEncoding=utf8&useSSL=true
+#    username: root
+#    password: admin
+    url: jdbc:mysql://localhost:3306/kpi2?useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+    properties:
+      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate:
+        dialect: com.oa.auth.config.MysqlConfig
+        format_sql: true
+        hbm2ddl:
+          auto: update
+  rabbitmq:
+    host: localhost
+    port: 5672  #
+    username: oasys
+    password: oasys
+    listener:
+      simple:
+        retry:
+          max-attempts: 3
+          enabled: false
+          initial-interval: 3000
+        default-requeue-rejected: false
+  redis:
+    host: localhost
+    port: 6379
+    password:
+server:
+  port: 9090
+---
+spring:
+  profiles: prod
+  application:
+    name: service-auth
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://123.56.219.11:3306/oa_admin?useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: root
+    password: toor
+  jpa:
+    show-sql: true
+    properties:
+      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate:
+        dialect: com.oa.auth.config.MysqlConfig
+        format_sql: true
+        hbm2ddl:
+          auto: update
+  rabbitmq:
+    host: 123.56.219.11
+    port: 5672  #
+    username: admin
+    password: rabbit2017
+    listener:
+      simple:
+        retry:
+          max-attempts: 3
+          enabled: false
+          initial-interval: 3000
+        default-requeue-rejected: true
+  redis:
+    host: localhost
+    port: 6379
+    password: 1234
+    cache:
+      expiration: 600
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:thefutureissc_2018@123.56.219.11:8761/eureka/
+      host: 123.56.219.11
+      port: 8761
+server:
+  port: 9091
+  address: 0.0.0.0
+feign:
+  hystrix:
+    enabled: true
+---
+spring:
+  profiles: prd-pre
+  application:
+    name: service-auth-test
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/kpi2?useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+    properties:
+      current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate:
+        dialect: com.oa.auth.config.MysqlConfig
+        format_sql: true
+        hbm2ddl:
+          auto: update
+  rabbitmq:
+    host: 123.56.219.11
+    port: 5672  #
+    username: admin
+    password: rabbit2017
+    listener:
+      simple:
+        retry:
+          max-attempts: 3
+          enabled: false
+          initial-interval: 3000
+        default-requeue-rejected: true
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    cache:
+      expiration: 600
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://admin:thefutureissc_2018@123.56.219.11:8761/eureka/
+      host: 123.56.219.11
+      port: 8761
+server:
+  port: 9991
+  address: 0.0.0.0
+feign:
+  hystrix:
+    enabled: true
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
